@@ -29,9 +29,9 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
   }, [isOpen]);
 
   // Handle input change for timer durations
-  const handleDurationChange = (field: keyof TimerConfig, value: string) => {
+  const handleDurationChange = (field: keyof TimerConfig) => (e: React.ChangeEvent<HTMLInputElement>) => {
     // Remove any leading zeros and handle empty string
-    const cleanValue = value.replace(/^0+(?=\d)/, '') || '0';
+    const cleanValue = e.target.value.replace(/^0+(?=\d)/, '') || '0';
     const numValue = parseFloat(cleanValue);
 
     // Update config with the cleaned numeric value
@@ -67,7 +67,13 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
   };
 
   // Handle preference toggles
-  const handlePreferenceChange = (field: keyof UserPreferences, value: boolean | string) => {
+  const handlePreferenceChange = (field: keyof UserPreferences) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const value = e.target.type === 'checkbox' 
+      ? (e.target as HTMLInputElement).checked 
+      : e.target.value;
+
     const newPreferences = {
       ...preferences,
       [field]: value
@@ -112,8 +118,8 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 min="0.1"
                 step="0.1"
                 value={config.focusDuration}
-                onChange={(e) => handleDurationChange('focusDuration', e.target.value)}
-                onBlur={(e) => {
+                onChange={handleDurationChange('focusDuration')}
+                onBlur={() => {
                   // Force update with stored value on blur
                   const savedConfig = getTimerConfig();
                   setConfig(savedConfig);
@@ -133,8 +139,8 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 min="0.1"
                 step="0.1"
                 value={config.breakDuration}
-                onChange={(e) => handleDurationChange('breakDuration', e.target.value)}
-                onBlur={(e) => {
+                onChange={handleDurationChange('breakDuration')}
+                onBlur={() => {
                   const savedConfig = getTimerConfig();
                   setConfig(savedConfig);
                 }}
@@ -153,8 +159,8 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 min="0.1"
                 step="0.1"
                 value={config.longBreakDuration}
-                onChange={(e) => handleDurationChange('longBreakDuration', e.target.value)}
-                onBlur={(e) => {
+                onChange={handleDurationChange('longBreakDuration')}
+                onBlur={() => {
                   const savedConfig = getTimerConfig();
                   setConfig(savedConfig);
                 }}
@@ -173,8 +179,8 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 min="1"
                 step="1"
                 value={config.sessionsUntilLongBreak}
-                onChange={(e) => handleDurationChange('sessionsUntilLongBreak', e.target.value)}
-                onBlur={(e) => {
+                onChange={handleDurationChange('sessionsUntilLongBreak')}
+                onBlur={() => {
                   const savedConfig = getTimerConfig();
                   setConfig(savedConfig);
                 }}
@@ -197,7 +203,7 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
               </label>
               <select
                 value={preferences.theme}
-                onChange={(e) => handlePreferenceChange('theme', e.target.value)}
+                onChange={handlePreferenceChange('theme')}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-white sm:text-sm"
               >
                 <option value="light">Light</option>
@@ -220,7 +226,7 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 <input
                   type="checkbox"
                   checked={preferences.sound}
-                  onChange={(e) => handlePreferenceChange('sound', e.target.checked)}
+                  onChange={handlePreferenceChange('sound')}
                   className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
                 />
               </div>
@@ -233,7 +239,7 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 <input
                   type="checkbox"
                   checked={preferences.notifications}
-                  onChange={(e) => handlePreferenceChange('notifications', e.target.checked)}
+                  onChange={handlePreferenceChange('notifications')}
                   className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
                 />
               </div>
@@ -253,7 +259,7 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 <input
                   type="checkbox"
                   checked={preferences.autoStartBreaks}
-                  onChange={(e) => handlePreferenceChange('autoStartBreaks', e.target.checked)}
+                  onChange={handlePreferenceChange('autoStartBreaks')}
                   className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
                 />
               </div>
@@ -266,7 +272,7 @@ export default function SettingsPanel({ isOpen, onClose, onSettingsChange }: Set
                 <input
                   type="checkbox"
                   checked={preferences.autoStartPomodoros}
-                  onChange={(e) => handlePreferenceChange('autoStartPomodoros', e.target.checked)}
+                  onChange={handlePreferenceChange('autoStartPomodoros')}
                   className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
                 />
               </div>

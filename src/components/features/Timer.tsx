@@ -140,7 +140,7 @@ export default function Timer() {
   };
 
   // Handle phase completion
-  const handlePhaseComplete = () => {
+  const handlePhaseComplete = useCallback(() => {
     setIsTransitioning(true);
     
     // Save completed session
@@ -174,7 +174,7 @@ export default function Timer() {
         setSessionStartTime(new Date().toISOString());
       }
     }, 500);
-  };
+  }, [state.currentPhase, state.completedSessions, config.sessionsUntilLongBreak, config.focusDuration, config.breakDuration, config.longBreakDuration, playPhaseSound, saveCompletedSession, setIsTransitioning, setState, sessionStartTime]);
 
   // Timer controls
   const startTimer = async () => {
@@ -219,7 +219,7 @@ export default function Timer() {
     }
 
     return () => clearInterval(interval);
-  }, [state.isRunning, state.isPaused, isTransitioning]);
+  }, [state.isRunning, state.isPaused, isTransitioning, handlePhaseComplete]);
 
   // Get phase-specific styles
   const getPhaseStyles = () => {
