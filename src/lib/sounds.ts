@@ -34,7 +34,8 @@ const createBeepBuffer = async () => {
 
 // Create notification sounds
 export const createSounds = async () => {
-  const context = initAudio();
+  // Initialize audio context but don't store the return value since we're not using it
+  initAudio();
   
   try {
     // Create different pitched beeps for different notifications

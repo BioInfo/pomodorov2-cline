@@ -174,7 +174,20 @@ export default function Timer() {
         setSessionStartTime(new Date().toISOString());
       }
     }, 500);
-  }, [state.currentPhase, state.completedSessions, config.sessionsUntilLongBreak, config.focusDuration, config.breakDuration, config.longBreakDuration, playPhaseSound, saveCompletedSession, setIsTransitioning, setState, sessionStartTime]);
+  }, [
+    state.currentPhase, 
+    state.completedSessions, 
+    config.sessionsUntilLongBreak, 
+    config.focusDuration, 
+    config.breakDuration, 
+    config.longBreakDuration, 
+    playPhaseSound, 
+    saveCompletedSession, 
+    setIsTransitioning, 
+    setState, 
+    sessionStartTime,
+    getCurrentPhaseDuration
+  ]);
 
   // Timer controls
   const startTimer = async () => {
